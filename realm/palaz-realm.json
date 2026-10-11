@@ -1,0 +1,202 @@
+{
+  "realm": "palaz",
+  "displayName": "سامانه‌های پالاز",
+  "enabled": true,
+  "sslRequired": "external",
+
+  "internationalizationEnabled": true,
+  "supportedLocales": ["fa", "en"],
+  "defaultLocale": "fa",
+
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "rememberMe": true,
+  "loginWithEmailAllowed": false,
+  "duplicateEmailsAllowed": true,
+  "editUsernameAllowed": false,
+
+  "bruteForceProtected": true,
+  "permanentLockout": false,
+  "failureFactor": 5,
+  "waitIncrementSeconds": 60,
+  "maxFailureWaitSeconds": 900,
+  "maxDeltaTimeSeconds": 43200,
+  "quickLoginCheckMilliSeconds": 1000,
+  "minimumQuickLoginWaitSeconds": 60,
+
+  "passwordPolicy": "length(8) and notUsername and digits(1)",
+
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "rememberMeSessionIdleTimeout": 604800,
+  "rememberMeSessionMaxLifespan": 604800,
+
+  "eventsEnabled": true,
+  "eventsExpiration": 7776000,
+  "enabledEventTypes": [
+    "LOGIN", "LOGIN_ERROR", "LOGOUT", "LOGOUT_ERROR",
+    "CODE_TO_TOKEN", "CODE_TO_TOKEN_ERROR",
+    "CLIENT_LOGIN", "CLIENT_LOGIN_ERROR",
+    "REFRESH_TOKEN_ERROR", "IDENTITY_PROVIDER_LOGIN_ERROR"
+  ],
+  "adminEventsEnabled": true,
+  "adminEventsDetailsEnabled": false,
+
+  "components": {
+    "org.keycloak.storage.UserStorageProvider": [
+      {
+        "name": "palaz-ad",
+        "providerId": "ldap",
+        "config": {
+          "enabled": ["true"],
+          "priority": ["0"],
+          "vendor": ["ad"],
+          "editMode": ["READ_ONLY"],
+          "importEnabled": ["true"],
+          "syncRegistrations": ["false"],
+          "trustEmail": ["true"],
+
+          "connectionUrl": ["${SSO_LDAP_URL}"],
+          "useTruststoreSpi": ["always"],
+          "startTls": ["false"],
+          "connectionPooling": ["true"],
+          "connectionTimeout": ["5000"],
+          "readTimeout": ["10000"],
+          "authType": ["simple"],
+          "bindDn": ["${SSO_LDAP_BIND_DN}"],
+          "bindCredential": ["${SSO_LDAP_BIND_PASSWORD}"],
+
+          "usersDn": ["${SSO_LDAP_USERS_DN}"],
+          "searchScope": ["2"],
+          "userObjectClasses": ["person, organizationalPerson, user"],
+          "customUserSearchFilter": ["(&(objectCategory=person)(sAMAccountName=*)(!(userAccountControl:1.2.840.113556.1.4.803:=2)))"],
+          "usernameLDAPAttribute": ["sAMAccountName"],
+          "rdnLDAPAttribute": ["cn"],
+          "uuidLDAPAttribute": ["objectGUID"],
+          "krbPrincipalAttribute": ["userPrincipalName"],
+          "pagination": ["true"],
+
+          "fullSyncPeriod": ["86400"],
+          "changedSyncPeriod": ["300"],
+          "batchSizeForSync": ["1000"],
+          "cachePolicy": ["DEFAULT"],
+
+          "allowKerberosAuthentication": ["false"],
+          "useKerberosForPasswordAuthentication": ["false"],
+          "validatePasswordPolicy": ["false"]
+        },
+        "subComponents": {
+          "org.keycloak.storage.ldap.mappers.LDAPStorageMapper": [
+            {
+              "name": "username",
+              "providerId": "user-attribute-ldap-mapper",
+              "config": {
+                "ldap.attribute": ["sAMAccountName"],
+                "user.model.attribute": ["username"],
+                "read.only": ["true"],
+                "always.read.value.from.ldap": ["false"],
+                "is.mandatory.in.ldap": ["true"]
+              }
+            },
+            {
+              "name": "first name",
+              "providerId": "user-attribute-ldap-mapper",
+              "config": {
+                "ldap.attribute": ["givenName"],
+                "user.model.attribute": ["firstName"],
+                "read.only": ["true"],
+                "always.read.value.from.ldap": ["true"],
+                "is.mandatory.in.ldap": ["false"]
+              }
+            },
+            {
+              "name": "last name",
+              "providerId": "user-attribute-ldap-mapper",
+              "config": {
+                "ldap.attribute": ["sn"],
+                "user.model.attribute": ["lastName"],
+                "read.only": ["true"],
+                "always.read.value.from.ldap": ["true"],
+                "is.mandatory.in.ldap": ["false"]
+              }
+            },
+            {
+              "name": "email",
+              "providerId": "user-attribute-ldap-mapper",
+              "config": {
+                "ldap.attribute": ["mail"],
+                "user.model.attribute": ["email"],
+                "read.only": ["true"],
+                "always.read.value.from.ldap": ["false"],
+                "is.mandatory.in.ldap": ["false"]
+              }
+            },
+            {
+              "name": "mobile",
+              "providerId": "user-attribute-ldap-mapper",
+              "config": {
+                "ldap.attribute": ["mobile"],
+                "user.model.attribute": ["phoneNumber"],
+                "read.only": ["true"],
+                "always.read.value.from.ldap": ["true"],
+                "is.mandatory.in.ldap": ["false"]
+              }
+            },
+            {
+              "name": "creation date",
+              "providerId": "user-attribute-ldap-mapper",
+              "config": {
+                "ldap.attribute": ["whenCreated"],
+                "user.model.attribute": ["createTimestamp"],
+                "read.only": ["true"],
+                "always.read.value.from.ldap": ["true"],
+                "is.mandatory.in.ldap": ["false"]
+              }
+            },
+            {
+              "name": "modify date",
+              "providerId": "user-attribute-ldap-mapper",
+              "config": {
+                "ldap.attribute": ["whenChanged"],
+                "user.model.attribute": ["modifyTimestamp"],
+                "read.only": ["true"],
+                "always.read.value.from.ldap": ["true"],
+                "is.mandatory.in.ldap": ["false"]
+              }
+            },
+            {
+              "name": "MSAD account controls",
+              "providerId": "msad-user-account-control-mapper",
+              "config": {}
+            },
+            {
+              "name": "ad-groups",
+              "providerId": "group-ldap-mapper",
+              "config": {
+                "mode": ["READ_ONLY"],
+                "groups.dn": ["${SSO_LDAP_GROUPS_DN}"],
+                "groups.ldap.filter": ["(cn=SSO-*)"],
+                "group.name.ldap.attribute": ["cn"],
+                "group.object.classes": ["group"],
+                "preserve.group.inheritance": ["false"],
+                "ignore.missing.groups": ["true"],
+                "membership.ldap.attribute": ["member"],
+                "membership.attribute.type": ["DN"],
+                "membership.user.ldap.attribute": ["sAMAccountName"],
+                "memberof.ldap.attribute": ["memberOf"],
+                "user.roles.retrieve.strategy": ["LOAD_GROUPS_BY_MEMBER_ATTRIBUTE_RECURSIVELY"],
+                "groups.path": ["/ad"],
+                "drop.non.existing.groups.during.sync": ["true"]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+
+  "groups": [
+    { "name": "ad" }
+  ]
+}
