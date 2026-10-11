@@ -33,16 +33,8 @@
   "ssoSessionIdleTimeoutRememberMe": 604800,
   "ssoSessionMaxLifespanRememberMe": 604800,
 
-  "eventsEnabled": true,
-  "eventsExpiration": 7776000,
-  "enabledEventTypes": [
-    "LOGIN", "LOGIN_ERROR", "LOGOUT", "LOGOUT_ERROR",
-    "CODE_TO_TOKEN", "CODE_TO_TOKEN_ERROR",
-    "CLIENT_LOGIN", "CLIENT_LOGIN_ERROR",
-    "REFRESH_TOKEN_ERROR", "IDENTITY_PROVIDER_LOGIN_ERROR"
-  ],
-  "adminEventsEnabled": true,
-  "adminEventsDetailsEnabled": false,
+  "eventsEnabled": false,
+  "adminEventsEnabled": false,
 
   "components": {
     "org.keycloak.userprofile.UserProfileProvider": [

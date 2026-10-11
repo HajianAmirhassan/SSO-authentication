@@ -25,7 +25,7 @@ services:
     image: palaz-sso/keycloak:${KC_VERSION:?set KC_VERSION in sso/.env}
     restart: unless-stopped
     # --import-realm فقط وقتی Realm وجود ندارد آن را می‌سازد؛ تغییرات بعدی از پنل یا با export انجام شود
-    # KC_DB / health / metrics در Dockerfile هنگام kc.sh build ثابت شده‌اند
+    # KC_DB در Dockerfile هنگام kc.sh build ثابت شده‌اند
     command: ["start", "--optimized", "--import-realm"]
     depends_on:
       postgres:
@@ -58,7 +58,6 @@ services:
       - ./certs:/opt/keycloak/conf/truststores:ro
     ports:
       - "8080:8080"
-      - "9000:9000"   # health & metrics: /health/ready , /metrics
 
 volumes:
   pgdata:

@@ -47,7 +47,6 @@ docker compose logs -f keycloak
 برای ارتقای Keycloak، `KC_VERSION` در `.env` و `keycloak.version` در `pom.xml` را با هم عوض کنید.
 
 - پنل ادمین: http://localhost:8080/admin (با `KC_BOOTSTRAP_ADMIN_*`)
-- سلامت: http://localhost:9000/health/ready
 
 ## بعد از اولین اجرا
 
@@ -112,7 +111,6 @@ Provider `phone-auth` در image هست ولی به هیچ flowی وصل نیس�
 ## Production
 
 - پشت reverse proxy (IIS/Nginx) با HTTPS، مثلاً `https://sso.palaz.local`؛ `KC_HOSTNAME` همان آدرس باشد
-- پورت `9000` (health/metrics) فقط داخلی باشد
 - Backup منظم volume `pgdata`
 - HA: دو نود Keycloak روی یک PostgreSQL
 

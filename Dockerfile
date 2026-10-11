@@ -35,9 +35,7 @@ RUN --mount=type=cache,target=/root/.m2 \
 FROM quay.io/keycloak/keycloak:${KC_VERSION}
 
 # گزینه‌های build-time؛ در kc.sh build ثابت می‌شوند و در اجرا با --optimized استفاده می‌شوند
-ENV KC_DB=postgres \
-    KC_HEALTH_ENABLED=true \
-    KC_METRICS_ENABLED=true
+ENV KC_DB=postgres
 
 COPY --from=provider-builder /build/dist/ /opt/keycloak/providers/
 COPY themes/ /opt/keycloak/themes/
