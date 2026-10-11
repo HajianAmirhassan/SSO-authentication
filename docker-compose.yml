@@ -17,15 +17,20 @@ services:
       retries: 10
 
   keycloak:
-    image: quay.io/keycloak/keycloak:${KC_VERSION:?set KC_VERSION in sso/.env}
+    # image سفارشی: Keycloak + providers/* + themes/* (Dockerfile)
+    build:
+      context: .
+      args:
+        KC_VERSION: ${KC_VERSION:?set KC_VERSION in sso/.env}
+    image: palaz-sso/keycloak:${KC_VERSION:?set KC_VERSION in sso/.env}
     restart: unless-stopped
     # --import-realm فقط وقتی Realm وجود ندارد آن را می‌سازد؛ تغییرات بعدی از پنل یا با export انجام شود
-    command: ["start", "--import-realm"]
+    # KC_DB / health / metrics در Dockerfile هنگام kc.sh build ثابت شده‌اند
+    command: ["start", "--optimized", "--import-realm"]
     depends_on:
       postgres:
         condition: service_healthy
     environment:
-      KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
       KC_DB_USERNAME: ${POSTGRES_USER:?set POSTGRES_USER in sso/.env}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in sso/.env}
@@ -33,8 +38,6 @@ services:
       KC_HOSTNAME: ${KC_HOSTNAME:?set KC_HOSTNAME in sso/.env}
       KC_HTTP_ENABLED: "true"
       KC_PROXY_HEADERS: xforwarded
-      KC_HEALTH_ENABLED: "true"
-      KC_METRICS_ENABLED: "true"
 
       # فقط برای اولین اجرا؛ بعد از ساخت ادمین دائمی، این کاربر موقت را حذف کنید
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME:?set KC_BOOTSTRAP_ADMIN_USERNAME in sso/.env}
@@ -46,7 +49,8 @@ services:
       # در realm/palaz-realm.json با ${...} جایگذاری می‌شوند
       SSO_LDAP_URL: ${SSO_LDAP_URL:?set SSO_LDAP_URL in sso/.env}
       SSO_LDAP_BIND_DN: ${SSO_LDAP_BIND_DN:?set SSO_LDAP_BIND_DN in sso/.env}
-      SSO_LDAP_BIND_PASSWORD: ${SSO_LDAP_BIND_PASSWORD:?set SSO_LDAP_BIND_PASSWORD in sso/.env}
+      # اختیاری: اگر خالی باشد، رمز را بعداً در پنل (User federation ← palaz-ad) وارد کنید
+      SSO_LDAP_BIND_PASSWORD: ${SSO_LDAP_BIND_PASSWORD:-}
       SSO_LDAP_USERS_DN: ${SSO_LDAP_USERS_DN:?set SSO_LDAP_USERS_DN in sso/.env}
       SSO_LDAP_GROUPS_DN: ${SSO_LDAP_GROUPS_DN:?set SSO_LDAP_GROUPS_DN in sso/.env}
     volumes:

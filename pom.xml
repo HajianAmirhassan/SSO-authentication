@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.github.hossein_i.keycloak.starter.kit</groupId>
+    <artifactId>keycloak-starter-kit</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+
+    <packaging>pom</packaging>
+
+    <name>Keycloak Starter Kit</name>
+    <description>
+        Starter kit for building custom Keycloak providers and themes.
+    </description>
+
+    <modules>
+        <module>providers/phone-auth</module>
+    </modules>
+
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.release>21</maven.compiler.release>
+
+        <!-- باید با KC_VERSION در .env یکی باشد (Dockerfile هر دو را از همین مقدار می‌سازد) -->
+        <keycloak.version>26.8.0</keycloak.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+</project>

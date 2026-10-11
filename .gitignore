@@ -2,3 +2,8 @@
 certs/*.pem
 certs/*.crt
 realm/*-export*.json
+
+# Maven / IDE
+**/target/
+.idea/
+*.iml
